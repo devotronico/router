@@ -1,0 +1,143 @@
+// PREAPRE SQL
+query   // ritorna: object(PDOStatement)#3 (1) { ["queryString"]=> string(18) "SELECT * FROM user" }
+prepare // ritorna: object(PDOStatement)#3 (1) { ["queryString"]=> string(18) "SELECT * FROM user" }
+exec    // ritorna: nessun risultato
+
+
+------------------------------
+// EXEC
+// è utilizzato per creare tabelle (MySQL Create Table utilizza exec) 
+// perchè non ritorna nessun risultato
+$conn->exec($sql);
+echo "Table MyGuests created successfully";
+MySQL Update Data utilizza istruzioni preparate ed execute ():
+
+------------------------------
+// PREPARE  (è utilizzato per fare le UPDATE)
+// ritorna un oggetto
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+echo $stmt->rowCount() . " records UPDATED successfully";
+
+------------------------------
+// QUERY (è utilizzato per fare le SELECT)
+// ritorna un oggetto
+$sql = "SELECT id, firstname, lastname FROM MyGuests";
+$result = $conn->query($sql);
+##############################################################################################################################
+
+
+
+
+
+
+
+// BIND 
+PDO::PARAM_INT
+PDO::PARAM_BOOL
+PDO::PARAM_NULL
+PDO::PARAM_STR
+bind
+bindValue
+------------------------------
+// BINDPARAM { bindParam() }
+$stmt->bindParam(':id', $id, PDO::PARAM_INT, 255);
+$stmt->bindParam(':name', $image, PDO::PARAM_STR, 32);
+$stmt->bindParam(':age', $age, PDO::PARAM_INT);
+$stmt->bindParam(':image', $image, PDO::PARAM_STR, 32);
+$stmt->bindParam(':registered', $registered, PDO::PARAM_BOOL);
+##############################################################################################################################
+
+// EXECUTE
+execute
+
+
+
+// FETCH
+fetchColumn()
+
+
+
+
+
+
+
+
+
+
+------------------------------
+fetch(); 
+Array
+(
+    [id] => 1
+    [0] => 1
+    [name] => Ryu
+    [1] => Ryu
+    [gender] => male
+    [2] => male
+    [country] => Japan
+    [3] => Japan
+    [birth] => 1964-09-20
+    [4] => 1964-09-20
+    [reg_date] => 2018-10-27 15:40:18
+    [5] => 2018-10-27 15:40:18
+)
+------------------------------
+fetch(PDO::FETCH_ASSOC);
+Array
+(
+    [id] => 1
+    [name] => Ryu
+    [gender] => male
+    [country] => Japan
+    [birth] => 1964-09-20
+    [reg_date] => 2018-10-27 15:40:18
+)
+i file devono essere letti ne formato array: $user['id'], $user['name'], $user['gender'], etc...
+
+------------------------------
+fetch(PDO::FETCH_OBJ)
+stdClass Object
+(
+    [id] => 1
+    [name] => Ryu
+    [gender] => male
+    [country] => Japan
+    [birth] => 1964-09-20
+    [reg_date] => 2018-10-27 15:40:18
+)
+i file devono essere letti ne formato object: $user->id, $user->name, $user->gender, etc...
+------------------------------
+fetchAll();
+fetchAll(PDO::FETCH_ASSOC);
+fetchAll(PDO::FETCH_OBJ)
+#########################################
+
+
+
+// ROW
+rowCount()
+
+
+// OTHER
+lastInsertId()
+
+
+
+
+
+//SQL
+
+
+// Inserire una nuova riga nella tabella
+INSERT INTO `user` (`id`, `name`, `gender`, `country`, `birth`, `reg_date`) VALUES (NULL, 'Ken', 'male', 'USA', '1965-02-14', '2018-10-27 15:40:18');
+
+
+// Rinominare una tabella
+RENAME TABLE `blog`.`user` TO `blog`.`users`;
+
+// inserimento nuovo campo nella tabella dopo un determinato campo
+ALTER TABLE `user` ADD `birth` DATE NOT NULL AFTER `age`;
+
+// cancellare un campo
+ALTER TABLE `user` DROP `age`;

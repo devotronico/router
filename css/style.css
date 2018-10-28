@@ -1,36 +1,52 @@
+/*
 *{margin: 0;padding: 0;}
 
 html {
     height: 100%;
     font-family: sans-serif;
 }
-
+*/
 body{
     height: auto;
     background-color: #333;
 }
 
 .container{
-    height: 100%;
+    min-height: 100%;
+    padding:0;
     background-color: silver;
+}
+
+main{
+    min-height: 100%;
+    padding:50px;
+  
 }
 
 nav{
     height: 100px;
     padding: 0 100px;
-    background-color: steelblue;
+    background-color: gold;
 }
 
 ul {
-    height: 100px;
+    height: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     list-style: none;
+  
 }
 
 li {
     font-size: 28px;
+}
+
+.form-btn {
+    min-width: 60px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 1.5rem;
 }
 
 

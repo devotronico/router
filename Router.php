@@ -2,20 +2,20 @@
 
 class Router
 {
-    protected $conn;
+   // protected $conn;
 
     protected $routes = [
 
-       // 'GET'=>[],
-      //  'POST'=>[],
+        // 'GET'=>[],
+        // 'POST'=>[],
     ];
 
   
     
-    //public function __construct(\PDO $conn){ 
-    public function __construct($conn){ 
+   // public function __construct(\PDO $conn){ 
+    public function __construct(){ 
 
-        $this->conn = $conn; 
+      //  $this->conn = $conn;  
 
     }
     
@@ -52,9 +52,8 @@ class Router
 
 
 
-        $method = $_SERVER['REQUEST_METHOD']; // ottiene se ci sono il metodo POST o GET
-
-        return $this->processQueue($uri, $method);
+        // la variabile superglobal $_SERVER['REQUEST_METHOD'] ci restituisce il metodo POST o GET
+        return $this->processQueue($uri, $_SERVER['REQUEST_METHOD']);
     }
 
     
@@ -76,34 +75,31 @@ class Router
             // sono segnate con il primo carattere '#' (placeholder) 
             // queste chiavi fanno un controllo aggiuntivo per estrapolare il valore dinamico dall' uri 
             // (es. da post/2 verrà estrapolato il valore 2 che verrà passato come argomento al metodo che lo richiederà)
-            $hasPlaceholder = false;
+          
             if ( substr($route, 0, 1) == '#' ) { // controlla se il primo carattere è uguale a '#'
             
                 $route = substr( $route, 1 ); // rimuove il carattere '#'
-                $hasPlaceholder = !$hasPlaceholder;
-            }
+           
+                // La funzione preg_quote fa l' escape ai caratteri come ':' in questo modo '\:'
+                // I caratteri speciali per le espressioni regolari sono . + * ? [ ^ ] $ ( ) { } = ! < > | :
+                // Es. la stringa 'post/:id' diventa 'post/\:id'
+                // test preg_quote: https://paiza.io/projects/0xAhUJ5nlnp7fI8U4hDDYQ
+                $route = preg_quote($route); 
             
-            if ( $hasPlaceholder) {
+                
+                /* PREPARAZIONE DELLA CHIAVE DELL' ARRAY PER CONFRONTARLA CON LA URI */
+                // ARGOMENTO 1 = Pattern di ricerca --------------> '/\\\:[a-zA-Z0-9\_\-]+/' 
+                // (es. cerca nella stringa della chiave il carattere ':' seguito da minimo un carattere compreso tra 'a' a 'z', tra 'A' a 'Z', tra '0' a '9' e i caratteri '_' e '-'   )
 
-            // fa l escape ai caratteri come ':' in questo modo '\:'
-            // I caratteri speciali per le espressioni regolari sono . + * ? [ ^ ] $ ( ) { } = ! < > | :
-            // Es. la stringa 'post/:id' diventa 'post/\:id'
-            $route = preg_quote($route); 
-        
+                // ARGOMENTO 2 = una parte di stringa verrà sostituita con il secondo argomento -> '([a-zA-Z0-9\-\_]+)'
+                // ARGOMENTO 3 = Chiave da modificare da -----------> es 'post/\:id', comment/\:id
             
-            /* PREPARAZIONE DELLA CHIAVE DELL' ARRAY PER CONFRONTARLA CON LA URI */
-            // ARGOMENTO 1 = Pattern di ricerca --------------> '/\\\:[a-zA-Z0-9\_\-]+/' 
-            // (es. cerca nella stringa della chiave il carattere ':' seguito da minimo un carattere compreso tra 'a' a 'z', tra 'A' a 'Z', tra '0' a '9' e i caratteri '_' e '-'   )
-
-            // ARGOMENTO 2 = una parte di stringa verrà sostituita con il secondo argomento -> '([a-zA-Z0-9\-\_]+)'
-            // ARGOMENTO 3 = Chiave da modificare da -----------> es 'post/\:id', comment/\:id
-          
-            // La corrispondenza '\:id' in 'post/\:id' viene sostituita da '([a-zA-Z0-9\-\_]+) quindi diventa 'post/([a-zA-Z0-9\-\_]+)
-            // se una parte della stringa nella varibile $route è riconosciuta dal primo argomento verrà sostituita dal secondo argomento
-            // Es. Il primo argomento '/\\\:[a-zA-Z0-9\_\-]+/' , in $route = ''post/\:id', trova corrispondenza in '\:id'
-            //       preg_replace( pattern di ricerca     ,  con cosa sostituire,  dove cercare )
-            //       preg_replace('/\\\:[a-zA-Z0-9\_\-]+/', '([a-zA-Z0-9\-\_]+)', 'post/\:id' );  diventa  'post/([a-zA-Z0-9\-\_]+)'
-            $route = preg_replace('/\\\:[a-zA-Z0-9\_\-]+/', '([a-zA-Z0-9\-\_]+)', $route); // $route = 'post/([a-zA-Z0-9\-\_]+)' 
+                // La corrispondenza '\:id' in 'post/\:id' viene sostituita da '([a-zA-Z0-9\-\_]+) quindi diventa 'post/([a-zA-Z0-9\-\_]+)
+                // se una parte della stringa nella varibile $route è riconosciuta dal primo argomento verrà sostituita dal secondo argomento
+                // Es. Il primo argomento '/\\\:[a-zA-Z0-9\_\-]+/' , in $route = ''post/\:id', trova corrispondenza in '\:id'
+                //       preg_replace( pattern di ricerca     ,  con cosa sostituire,  dove cercare )
+                //       preg_replace('/\\\:[a-zA-Z0-9\_\-]+/', '([a-zA-Z0-9\-\_]+)', 'post/\:id' );  diventa  'post/([a-zA-Z0-9\-\_]+)'
+                $route = preg_replace('/\\\:[a-zA-Z0-9\_\-]+/', '([a-zA-Z0-9\-\_]+)', $route); // $route = 'post/([a-zA-Z0-9\-\_]+)' 
             }
 
             // PREPARIAMO LA VARIABILE '$pattern' PER ESSERE CONFRONTATA CON LA VARIABILE $uri 
@@ -130,9 +126,9 @@ class Router
                 return $this->callMethod($callback, $matches); 
             }
         }
-        //throw new Exception('Nessuna rotta trovata col nome '.$uri);
-        $callback = 'app\Controller@error';
-        // $callback = 'App\Controllers\HomeController@error';
+
+        // Se non è stata trovata nessuna chiave che corrisponde alla rotta da noi richiesta allora verremo indirizzati in una pagina di errore 404
+        $callback = 'app\controller\Controller@error'; 
         return $this->callMethod($callback); 
     }
 
@@ -143,8 +139,9 @@ class Router
     protected function callMethod($callback, array $matches=[])
     {
         try {
+
             if ( is_callable($callback) ) { //se trova la funzione
-              die('Errore in classe '.__CLASS__.' metodo '.__METHOD__);
+            //  die('Errore in classe '.__CLASS__.' metodo '.__METHOD__);
               // al momento non si attiva mai perchè non esitono funzioni tipo come App\Controllers\PostController@getPosts'
               // dobbiamo spezzare dove sta il simbolo '@' per ricavarne il metodo     
                 return call_user_func_array($callback, $matches);
@@ -163,19 +160,24 @@ class Router
             $controller = $tokens[0]; // assegniamo alla variabile $controller la stringa del percorso namespace della classe
             // la variabile $controller contiene una stringa del percorso namespace della classe
             // applicando il costrutto 'new' davanti a esso richiama la classe a cui la stringa fa riferimento
-            $class = new $controller($this->conn); // creiamo un istanza della classe       
-            
+            $class = new $controller(); // creiamo un istanza della classe       
+         
             // METODO DELLA CLASSE
             $method = $tokens[1]; // assegniamo a $method il metodo della classe
 
-            if(method_exists($controller, $method)){ // Se il metodo trovato esiste
+
+            // La funzione 'method_exists' controlla se i due argomenti che vengono passati siano il primo una classe e il secondo il metodo della classe del primo argomento
+            // $controller(come argomento accetta una stringa del nome di una classe, oppure un' istanza di una classe)
+            // $method(come argomento accetta una stringa del nome di un metodo della classe) e il suo 'metodo' sono richiamabili
+            if(method_exists($class, $method)){ // Se il metodo trovato esiste
               
                 call_user_func_array([$class, $method], $matches); //es. ([PostController, delete], 8)
            
                 return $class;
             } else {
                 throw new Exception('Il metodo '.$method.' non esiste nella classe '.$controller);
-            }
+        }
+
         } catch (Exception $e){
             die($e->getMessage());
         }
