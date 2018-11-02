@@ -8,7 +8,7 @@ html {
 */
 body{
     height: auto;
-    background-color: #333;
+    background-color: #999;
 }
 
 .container{
@@ -23,13 +23,13 @@ main{
   
 }
 
-nav{
+.navigation{
     height: 100px;
     padding: 0 100px;
     background-color: gold;
 }
 
-ul {
+.navigation__list {
     height: 100%;
     display: flex;
     justify-content: space-around;
@@ -38,7 +38,7 @@ ul {
   
 }
 
-li {
+.navigation__item {
     font-size: 28px;
 }
 

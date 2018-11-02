@@ -11,18 +11,19 @@
 </head>
 <body>
     <div class="container">
-        <nav>
-            <ul>
-                <li><a href="/list">Users</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/function/5/10">Function</a></li>
+        <nav class="navigation">
+            <ul class="navigation__list">
+                <li class="navigation__item"><a class="navigation__link" href="/home">Home</a></li>
+                <li class="navigation__item"><a class="navigation__link" href="/page/1">Page</a></li>
+                <li class="navigation__item"><a class="navigation__link" href="/contact">Contact</a></li>
+                <li class="navigation__item"><a class="navigation__link" href="/about">About</a></li>
+                <li class="navigation__item"><a class="navigation__link" href="/function/5/10">Function</a></li>
             </ul>
         </nav>
         <div class="template">
             <p><?=$this->template?></p>
         </div>
     </div>
-    <script src="/public/js/main.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>
