@@ -1,10 +1,2 @@
 reference/
-*.txt
-*.png
-*.jpg
-*.jpeg
-*.gif
-/index.php
-*.old.css
-*.old.js
-*.old.php
+public/image/

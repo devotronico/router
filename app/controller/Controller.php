@@ -37,7 +37,25 @@ class Controller{
 
 
 
+    /**
+     * AJAX
+     * 
+     * Caricare dati in modo asincrono dal server utilizzando AJAX
+     * Il file javascript main.js si occupa di gestire la chiamata ajax
+     * cliccando nella Navbar sul link AJAX attiveremo la rotta "/ajax/3"  
+     * questa rotta va inviata al server che tramite la classe Router
+     * la indirizza alla classe controller: Controller 
+     * al metodo: ajax
+     * con argomento: 3
+     * 
+     * @access public
+     * @return string
+     */
+    public function ajax($id) {
 
+        die( "namespace: ".__NAMESPACE__."<br>classe: ".__CLASS__."<br>metodo: ".__METHOD__."<br>argomento: ".$id."<br>");
+     }
+   
     
 
         

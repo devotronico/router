@@ -1,5 +1,7 @@
 <?php
 
+
+
 // DA LOCALE
 // Considerato che vogliamo che il punto di ingresso deve essere nella sottoCartella:  'nomesito\public\index.php'
 
@@ -39,8 +41,7 @@ $listOfRoutes = [
         "#function/:id/:id" => "_somma",
     ],
     'POST'=>[
-      
-       
+        '#ajax/:id' => 'app\controller\Controller@ajax',
     ]
 ];
 
